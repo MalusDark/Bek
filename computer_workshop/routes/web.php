@@ -14,3 +14,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/card_count/{min}/{max}/{name}/{car}', 'CardsController@mainCardsPage');
+Route::get('/', fn () => view('app'));

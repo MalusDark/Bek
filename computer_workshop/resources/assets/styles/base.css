@@ -1,0 +1,96 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+  color: #fff;
+}
+
+body {
+  font-size: 15px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.round {
+  border-radius: 6px;
+}
+
+
+.our-services {
+font-weight: bold;	
+  color:#EEC161;
+
+
+}
+.zak {
+  
+  font-weight: bold;	
+  color:#EEC161;
+}
+
+.bgImage {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.owerflow-scroll-y {
+  overflow-y: scroll;
+  text-overflow: ellipsis;
+}
+
+.owerflow-scroll-y::-webkit-scrollbar {
+  width: 0;
+}
+
+:root {
+  --swiper-theme-color: #8dd3bb !important;
+}
+
+.swiper-pagination-bullet {
+  width: 17px !important;
+  height: 17px !important;
+}
+
+.margin-s {
+  margin-left: 6%;
+  margin-right: 6%;
+}
+
+.border {
+ border: 2px solid white; 
+ padding-bottom: 8px; 
+ padding-top: 8px; 
+ padding-left: 10px; 
+ padding-right: 10px
+}
+
+.margin {
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25%, 75% {
+    transform: translateX(-10px); 
+  }
+  50% {
+    transform: translateX(10px);
+  }
+}
+
+@keyframes shakeY {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  25%, 75% {
+    transform: translateY(-3px); 
+  }
+  50% {
+    transform: translateY(3px);
+  }
+}
