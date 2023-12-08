@@ -8,6 +8,7 @@ class service extends Model
 {
     protected $table = 'services';
     protected $guarded = false;
+    public int $id;
     public string $serviceName;
     public string $mainInfo;
     public string $allInfo;

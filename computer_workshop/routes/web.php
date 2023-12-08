@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CardsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,3 +16,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/card_count/{min}/{max}/{name}/{car}', 'CardsController@mainCardsPage');
 Route::get('/', fn () => view('app'));
+Route::get('/AllList', CardsController::class);

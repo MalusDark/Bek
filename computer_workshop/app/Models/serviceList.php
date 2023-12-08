@@ -45,6 +45,32 @@ class serviceList extends Model
         return "Error";
     }
 
+    public  static  function AllList()
+    {
+        $hostname = "localhost";
+        $username = "admin";
+        $password = "password";
+        $databaseName = "computer_workshop";
+        $connect = mysqli_connect($hostname, $username, $password, $databaseName);
+        $res = $connect->query("SELECT id, serviceName, mainInfo, allInfo, price, image FROM services");
+        if ($res->num_rows > 0)
+        {
+            $row = $res->fetch_assoc();
+            $Item = new service();
+            $Item->id = $row["id"];
+            $Item->serviceName = $row["serviceName"];
+            $Item->mainInfo = $row["mainInfo"];
+            $Item->allInfo = $row["allInfo"];
+            $Item->price = $row["price"];
+            $Item->image = $row["image"];
+            return $Item;
+        }
+        else
+        {
+            return "Empty";
+        }
+        $connect->close();
+    }
     public static function FilterList(int $number)
     {
         $hostname = "localhost";
@@ -52,12 +78,13 @@ class serviceList extends Model
         $password = "password";
         $databaseName = "computer_workshop";
         $connect = mysqli_connect($hostname, $username, $password, $databaseName);
-        $res = $connect->query("SELECT serviceName, mainInfo, allInfo, price, image FROM services WHERE services.id = '$number'");
+        $res = $connect->query("SELECT id, serviceName, mainInfo, allInfo, price, image FROM services WHERE services.id = '$number'");
 
         if ($res->num_rows > 0)
         {
             $row = $res->fetch_assoc();
             $Item = new service();
+            $Item->id = $row["id"];
             $Item->serviceName = $row["serviceName"];
             $Item->mainInfo = $row["mainInfo"];
             $Item->allInfo = $row["allInfo"];
