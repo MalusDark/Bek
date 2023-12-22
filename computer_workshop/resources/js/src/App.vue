@@ -1,7 +1,5 @@
 <script lang="ts">
 
-import { ref, onMounted } from "vue";
-import { RouterView } from 'vue-router'
 import Footer from '../../components/Footer.vue'
 import Body from '../../components/Body.vue'
 import Header from "../../components/Header.vue";

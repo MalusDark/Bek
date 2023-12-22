@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\service;
 use App\Models\serviceList;
-use Illuminate\Http\Request;
 
 class CardsController extends Controller
 {
-    public function __invoke()
+    public function FilterList($min,$max,$selectedServiceType,$AutoType) : void
     {
-        return serviceList::FilterList(1);
+        serviceList::FilterList($min,$max,$selectedServiceType,$AutoType);
     }
-    //public function returnCount($min, $max, $name, $car)
-    //{
-    //    return view('main.cards');
-    //}
+    public function SearchService($name) : void
+    {
+        serviceList::SearchService($name);
+    }
+    public function  AllList() : void
+    {
+        serviceList::AllList();
+    }
 }

@@ -1,19 +1,9 @@
 <?php
 
-use App\Http\Controllers\CardsController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CardsController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
-Route::get('/card_count/{min}/{max}/{name}/{car}', 'CardsController@mainCardsPage');
+Route::get('/Search/{name}', [CardsController::class, 'SearchService']);
 Route::get('/', fn () => view('app'));
-Route::get('/AllList', CardsController::class);
+Route::get('/AllList/',[CardsController::class, 'AllList']);
+Route::get('/FilterList/{min}/{max}/{selectedServiceType}/{AutoType}', [CardsController::class, 'FilterList']);

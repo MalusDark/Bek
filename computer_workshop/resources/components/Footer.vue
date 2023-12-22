@@ -25,19 +25,19 @@
                     <div class="flex-col">
                         <p class="font-bold mt-10px">Контакты</p>
                         <div class="mt-10px">
-                            <img class="w-20px h-20px mr-10px v-middle mr-5px" src="@/assets/img/phone.png" alt="phone" />
+                            <img class="w-20px h-20px mr-10px v-middle mr-5px" src="../assets/img/phone.png" alt="phone" />
                             <span>+7 (8442) 11-11-11</span>
                         </div>
                         <div class="mt-10px">
-                            <img class="w-20px h-20px mr-10px v-middle mr-5px" src="@/assets/img/email.png" alt="mail" />
+                            <img class="w-20px h-20px mr-10px v-middle mr-5px" src="../assets/img/email.png" alt="mail" />
                             <span>autoservice@mail.ru</span>
                         </div>
                         <div class="mt-10px">
-                            <img class="w-20px h-20px mr-10px v-middle mr-5px" src="@/assets/img/location.png" alt="home" />
+                            <img class="w-20px h-20px mr-10px v-middle mr-5px" src="../assets/img/location.png" alt="home" />
                             <span class="inline-block">Университетский пр- кт 100</span>
                         </div>
                         <div class="mt-10px">
-                            <img class="w-20px h-20px mr-10px v-middle mr-5px" src="@/assets/img/clock.png" alt="clock" />
+                            <img class="w-20px h-20px mr-10px v-middle mr-5px" src="../assets/img/clock.png" alt="clock" />
                             <span class="inline-block">Пн-Вс 08:00 - 20:00</span>
                         </div>
                     </div>

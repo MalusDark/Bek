@@ -6,39 +6,48 @@
                 <span class="font-size-8 font-bold color-#535353 mt-50px">Каталог</span>
             </div>
             <div class="search-container">
-                <input v-model="searchQuery " type="text" placeholder="Поиск..." class="search-input" />
-                <button @click="search" class="search-button">
-                    <img class="w-20px h-20px mr-10px v-middle mr-5px" src="../../public/src/assets/img/search.png" alt="home" />
+                <input  id="searchWord" v-model="searchWord" type="text" placeholder="Поиск..." class="search-input" />
+                <button  class="search-button" @click="SearchService()">
+                    <img class="w-20px h-20px mr-10px v-middle mr-5px" src="../assets/img/search.png" alt="home" />
                 </button>
             </div>
             <div id="empty-container" class="flex justify-between">
 
                 <div class="filter-container">
                     <h2>Фильтр</h2>
-                    <div class="filter-item">
-                        <label for="priceRange">Фильтр по цене:</label>
-                        <input type="range" id="priceRange" min="0" max="100000" step="100">
-                        <span class="color-#535353" id="priceValue">0₽ - 100000₽</span>
+                    <div class="price-input-container flex flex-col">
+                        <div class="price-inputs flex justify-between">
+                            <input type="number" id="minPriceInput" placeholder="Мин цена" class="price-text-input color-#535353" v-model.number="minPrice" @input="updatePriceFromInput" @blur="updatePriceFromInput">
+                            <input type="number" id="maxPriceInput" placeholder="Макс цена" class="price-text-input color-#535353" v-model.number="maxPrice" @input="updatePriceFromInput" @blur="updatePriceFromInput">
+                        </div>
+                        <div class="flex align-items-center slider-container">
+                            <input type="range" id="minPriceRange" :min="minLimit" :max="maxPrice" step="100" v-model.number="minPrice" @input="updatePricesFromRange" class="price-range">
+                            <input type="range" id="maxPriceRange" :min="minPrice" :max="maxLimit" step="100" v-model.number="maxPrice" @input="updatePricesFromRange" class="price-range">
+                        </div>
                     </div>
+
                     <div class="filter-item">
                         <label for="serviceType">Тип услуги:</label>
-                        <select id="serviceType" class="color-#535353">
-                            <option class="cl" value="cleaning">Хим чистка</option>
-                            <option class="cl" value="suspension">Подвеска</option>
-                            <option class="cl" value="electric">Электрика</option>
-                            <option class="cl" value="steering">Рулевое управление</option>
+                        <select id="serviceType" class="color-#535353" v-model="selectedServiceType">
+                            <option class="cl" value="Хим чистка">Хим чистка</option>
+                            <option class="cl" value="Подвеска">Подвеска</option>
+                            <option class="cl" value="Электрика">Электрика</option>
+                            <option class="cl" value="Рулевое управление">Рулевое управление</option>
                         </select>
                     </div>
                     <div class="filter-item">
                         <label for="carBrand">Марка автомобиля:</label>
-                        <select id="carBrand" class="color-#535353">
-                            <option class="cl" value="kia">Kia</option>
-                            <option class="cl" value="lada">Lada</option>
-                            <option class="cl" value="bmw">BMW</option>
+                        <select id="carBrand" v-model="AutoType" class="color-#535353">
+                            <option class="cl" value="Kia">Kia</option>
+                            <option class="cl" value="Lada">Lada</option>
+                            <option class="cl" value="BMW">BMW</option>
                         </select>
                     </div>
-                    <button class="apply-button">Применить</button>
-                    <button class="reset-button">Сбросить</button>
+                    <div class="filter-buttons">
+                        <button class="reset-button" @click="AllList()" >Сбросить</button>
+                        <button class="apply-button" @click="FilterList()">Применить</button>
+                    </div>
+
                 </div>
                 <div class="product-cards-container">
                     <div class="flex justify-between">
@@ -88,86 +97,20 @@
                     <div class="flex justify-between">
                         <span class="font-size-6 font-bold color-#535353 mt-50px">Весь каталог</span>
                     </div>
-                    <div class="flex justify-between mt-30px">
-                        <router-link to="/" class="service round flex flex-col w-30% border v-middle mr-5px border-#E5E5E5">
+                    <div ></div>
+                    <div class="flex justify-between mt-30px" v-for="(group, index) in groupedItems" :key = "index">
+                        <router-link to="/" v-for="item in group" :key ="item.id" class="service round flex flex-col w-30% border v-middle mr-5px border-#E5E5E5">
                             <div class="relative w-100%">
-                                <div class="bgImage round pt-70% mt-30px mr-10px ml-10px" :style="{backgroundImage: `url(src/assets/img/4.jpg)`}"></div>
+                                <div class="bgImage round pt-70% mt-30px mr-10px ml-10px" :style="{backgroundImage: `url(src/assets/img/${item.image})`}"></div>
                             </div>
-                            <span class="mt-30px mb-30px cl">Электрика</span>
+                            <span class="mt-30px mb-30px cl">{{ item.serviceName }}</span>
                             <ul>
-                                <li class="font-size-4 color-#535353">Уборка салона и мойка машины</li>
-                                <li class="font-size-4 color-#535353">Подходит для автомобилей: Kia, Lada, BMW</li>
-                                <li class="font-size-4 color-#535353">В среднем занимает 3 часа</li>
+                                <li class="font-size-4 color-#535353">{{ item.mainInfo}}</li>
+                                <li class="font-size-4 color-#535353">Подходит для автомобилей: {{ item.avto }}</li>
+                                <li class="font-size-4 color-#535353">В среднем занимает {{ item.time }} минут</li>
                             </ul>
-                            <span class="mb-40px zak mt-40px font-size-5">41 500 ₽</span>
-                            <button class="more-info-btn bg-#0C0537 text-white py-4 px-6 rounded font-size-4" @click="showModal = true">Подробнее</button>
-                        </router-link>
-                        <router-link to="/" class="service round flex flex-col w-30% border v-middle mr-5px border-#E5E5E5">
-                            <div class="relative w-100%">
-                                <div class="bgImage round pt-70% mt-30px mr-10px ml-10px" :style="{backgroundImage: `url(src/assets/img/5.jpg)`}"></div>
-                            </div>
-                            <span class="mt-30px mb-30px cl">Замена шин</span>
-                            <ul>
-                                <li class="font-size-4 color-#535353">Уборка салона и мойка машины</li>
-                                <li class="font-size-4 color-#535353">Подходит для автомобилей: Kia, Lada, BMW</li>
-                                <li class="font-size-4 color-#535353">В среднем занимает 3 часа</li>
-                            </ul>
-                            <span class="mb-40px zak mt-40px font-size-5">1800 ₽</span>
-                            <button class="more-info-btn bg-#0C0537 text-white py-4 px-6 rounded font-size-4" @click="showModal = true">Подробнее</button>
-                        </router-link>
-                        <router-link to="/" class="service round flex flex-col w-30% border v-middle mr-5px border-#E5E5E5">
-                            <div class="relative w-100%">
-                                <div class="bgImage round pt-70% mt-30px mr-10px ml-10px" :style="{backgroundImage: `url(src/assets/img/6.jpg)`}"></div>
-                            </div>
-                            <span class="mt-30px mb-30px cl">Замена масла</span>
-                            <ul>
-                                <li class="font-size-4 color-#535353">Уборка салона и мойка машины</li>
-                                <li class="font-size-4 color-#535353">Подходит для автомобилей: Kia, Lada, BMW</li>
-                                <li class="font-size-4 color-#535353">В среднем занимает 3 часа</li>
-                            </ul>
-                            <span class="mb-40px zak mt-40px font-size-5">500 ₽</span>
-                            <button class="more-info-btn bg-#0C0537 text-white py-4 px-6 rounded font-size-4" @click="showModal = true">Подробнее</button>
-                        </router-link>
-                    </div>
-                    <div class="flex justify-between mt-30px mb-50px">
-                        <router-link to="/" class="service round flex flex-col w-30% border v-middle mr-5px border-#E5E5E5">
-                            <div class="relative w-100%">
-                                <div class="bgImage round pt-70% mt-30px mr-10px ml-10px" :style="{backgroundImage: `url(src/assets/img/7.jpg)`}"></div>
-                            </div>
-                            <span class="mt-30px mb-30px cl">Подвеска</span>
-                            <ul>
-                                <li class="font-size-4 color-#535353">Уборка салона и мойка машины</li>
-                                <li class="font-size-4 color-#535353">Подходит для автомобилей: Kia, Lada, BMW</li>
-                                <li class="font-size-4 color-#535353">В среднем занимает 3 часа</li>
-                            </ul>
-                            <span class="mb-40px zak mt-40px font-size-5">1500 ₽</span>
-                            <button class="more-info-btn bg-#0C0537 text-white py-4 px-6 rounded font-size-4" @click="showModal = true">Подробнее</button>
-                        </router-link>
-                        <router-link to="/" class="service round flex flex-col w-30% border v-middle mr-5px border-#E5E5E5">
-                            <div class="relative w-100%">
-                                <div class="bgImage round pt-70% mt-30px mr-10px ml-10px" :style="{backgroundImage: `url(src/assets/img/8.jpg)`}"></div>
-                            </div>
-                            <span class="mt-30px mb-30px cl">Тормазная система</span>
-                            <ul>
-                                <li class="font-size-4 color-#535353">Уборка салона и мойка машины</li>
-                                <li class="font-size-4 color-#535353">Подходит для автомобилей: Kia, Lada, BMW</li>
-                                <li class="font-size-4 color-#535353">В среднем занимает 3 часа</li>
-                            </ul>
-                            <span class="mb-40px zak mt-40px font-size-5">21 800 ₽</span>
-                            <button class="more-info-btn bg-#0C0537 text-white py-4 px-6 rounded font-size-4" @click="showModal = true">Подробнее</button>
-                        </router-link>
-                        <router-link to="/" class="service round flex flex-col w-30% border v-middle mr-5px border-#E5E5E5">
-                            <div class="relative w-100%">
-                                <div class="bgImage round pt-70% mt-30px mr-10px ml-10px" :style="{backgroundImage: `url(src/assets/img/9.jpg)`}"></div>
-                            </div>
-                            <span class="mt-30px mb-30px cl">Двигатель</span>
-                            <ul>
-                                <li class="font-size-4 color-#535353">Уборка салона и мойка машины</li>
-                                <li class="font-size-4 color-#535353">Подходит для автомобилей: Kia, Lada, BMW</li>
-                                <li class="font-size-4 color-#535353">В среднем занимает 3 часа</li>
-                            </ul>
-                            <span class="mb-40px zak mt-40px font-size-5">37 900 ₽</span>
-                            <button class="more-info-btn bg-#0C0537 text-white py-4 px-6 rounded font-size-4" @click="showModal = true">Подробнее</button>
+                            <span class="mb-40px zak mt-40px font-size-5">{{ item.price }} ₽</span>
+                            <div class="more-info-btn bg-#0C0537 text-white py-4 px-6 rounded font-size-4" @click="openModal(item)">Подробнее</div>
                         </router-link>
                     </div>
                 </div>
@@ -176,8 +119,15 @@
 
         <div v-if="showModal" class="modal" @click="closeModal">
             <div class="modal-content" @click.stop>
-                <span class="mb-40px zak mt-40px font-size-5">Тут будет ифнормация об услуге</span>
-                <button class="ml-10px close-button" @click="showModal = false">&#10006;</button>
+                <div class="relative w-100%">
+                    <div class="bgImage round pt-70% mt-30px mr-10px ml-10px" :style="{backgroundImage: `url(src/assets/img/${image})`}"></div>
+                </div>
+                <ul>
+                    <li class="font-size-4 color-#535353">{{ mainInfo}}</li>
+                    <li class="font-size-4 color-#535353">Подходит для автомобилей: {{ Auto }}</li>
+                   </ul>
+                <span class="mb-40px zak mt-40px font-size-5">{{ Price }} ₽</span>
+                <button class="ml-10px close-button closeModal" @click="showModal = false">&#10006;</button>
             </div>
         </div>
 
@@ -187,59 +137,159 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { AxiosError as AxiosErrorFromImport } from 'axios';
-import axios from 'axios';
+import axios from "axios";
+import CardData from '../../public/services.json';
 
 export default defineComponent({
     setup() {
         const showModal = ref(false);
+        const minPrice = ref(0); // Минимальная цена
+        const maxPrice = ref(50000); // Максимальная цена
+        const minLimit = ref(0);     // Абсолютное минимальное значение
+        const maxLimit = ref(50000); // Абсолютное максимальное значение
 
         const closeModal = () => {
             showModal.value = false;
+        }
+        const updatePricesFromRange = (event: Event) => {
+            const minPriceRange = document.querySelector('#minPriceRange') as HTMLInputElement;
+            const maxPriceRange = document.querySelector('#maxPriceRange') as HTMLInputElement;
+            const minPriceInput = document.querySelector('#minPriceInput') as HTMLInputElement;
+            const maxPriceInput = document.querySelector('#maxPriceInput') as HTMLInputElement;
+            const minPriceNumber = parseFloat(minPriceRange.value);
+            const maxPriceNumber = parseFloat(maxPriceRange.value);
+
+            if (parseInt(minPriceRange.value) > parseInt(maxPriceInput.value)) {
+                minPrice.value = parseInt(maxPriceInput.value);
+                minPriceRange.value = maxPriceInput.value;
+            }
+
+            if (parseInt(maxPriceRange.value) < parseInt(minPriceInput.value)) {
+                maxPrice.value = parseInt(minPriceInput.value);
+                maxPriceRange.value = minPriceInput.value;
+            }
+
+            if (!isNaN(minPriceNumber) && !isNaN(maxPriceNumber)) {
+                if (minPriceNumber >= minLimit.value && minPriceNumber <= maxPriceNumber) {
+                    minPrice.value = minPriceNumber;
+                } else {
+                    minPrice.value = minLimit.value;
+                }
+
+                if (maxPriceNumber <= maxLimit.value && maxPriceNumber >= minPriceNumber) {
+                    maxPrice.value = maxPriceNumber;
+                } else {
+                    maxPrice.value = maxLimit.value;
+                }
+            }
         };
+
+        // Метод для обновления минимальной и максимальной цены
+        const updatePriceFromInput = () => {
+            const minPriceInput = document.querySelector('#minPriceInput') as HTMLInputElement;
+            const maxPriceInput = document.querySelector('#maxPriceInput') as HTMLInputElement;
+            const minPriceRange = document.querySelector('#minPriceRange') as HTMLInputElement;
+            const maxPriceRange = document.querySelector('#maxPriceRange') as HTMLInputElement;
+
+            minPrice.value = Math.max(0, parseInt(minPriceInput.value));
+            maxPrice.value = Math.min(50000, parseInt(maxPriceInput.value));
+
+            minPriceRange.value = minPrice.value.toString(); // Минимальное значение
+            maxPriceRange.value = maxPrice.value.toString(); // Максимальное значение
+
+            if (minPrice.value > maxPrice.value) {
+                maxPrice.value = minPrice.value;
+                maxPriceInput.value = minPrice.value.toString();
+            }
+
+            const priceRange = document.querySelector('#priceRange') as HTMLInputElement;
+            priceRange.value = minPrice.value.toString(); // Обновлять значение ползунка на значение минимальной цены
+        }
 
         return {
             showModal,
             closeModal,
+            minPrice,
+            maxPrice,
+            updatePriceFromInput,
+            maxLimit,
+            minLimit,
+            updatePricesFromRange,
         };
     },
 
-    name: "CardList",
     data() {
-        return{
-            Card: null
+        return {
+            CardData : CardData,
+            mainInfo: ' ',
+            image: ' ',
+            Price: ' ',
+            Auto: ' ',
+            selectedServiceType: ref('Хим чистка'),
+            searchWord: ref(''),
+            AutoType: ref('Kia'),
         }
     },
 
-    mounted() {
-        const priceRange = this.$el.querySelector('#priceRange') as HTMLInputElement;
-        const priceValue = this.$el.querySelector('#priceValue') as HTMLSpanElement;
-
-        priceRange.addEventListener('input', () => {
-            this.updatePriceValue();
-        });
-
-        this.updatePriceValue();
-
-        this.getAllList();
-
+    computed:{
+        groupedItems()
+        {
+            const result = [];
+            const chunkSize = 3;
+            for(let i = 0; i < this.CardData.length; i+=chunkSize)
+            {
+                result.push(this.CardData.slice(i,i+chunkSize));
+            }
+            return result;
+        }
+    },
+    created() {
+        this.AllList()
     },
     methods: {
-        getAllList() {
-            axios.get('/AllList')
-                .then( data => {
-                    console.log(data);
-                })
+        FilterList()
+        {
+            try
+            {
+                axios.get(`/FilterList/${this.minPrice}/${this.maxPrice}/${this.selectedServiceType}/${this.AutoType}`)
+                    .then(response => this.posts = response.data);
+            } catch (error)
+            {
+                console.log(error);
+            }
         },
-        updatePriceValue() {
-            const priceRange = this.$el.querySelector('#priceRange') as HTMLInputElement;
-            const priceValue = this.$el.querySelector('#priceValue') as HTMLSpanElement;
-
-            priceValue.textContent = `0₽ - ${priceRange.value}₽`;
+        async AllList()
+        {
+            try
+            {
+                axios.get(`/AllList/`)
+                    .then(response => this.posts = response.data);
+            } catch (error)
+            {
+                console.log(error);
+            }
         },
+        openModal(item) {
+            this.showModal = true;
+            this.mainInfo = item.allInfo;
+            this.image = item.image;
+            this.Price = item.price;
+            this.Auto = item.avto;
+        },
+        async SearchService(){
+            try
+            {
+                axios.get(`/Search/${this.searchWord}`)
+                    .then(response => this.posts = response.data);
+            } catch (error)
+            {
+                console.log(error);
+            }
+        }
     }
 });
 </script>
+
 
 
 <style scoped>
@@ -258,23 +308,9 @@ main {
     justify-content: space-between; /* Подстройте выравнивание по необходимости */
 }
 
-.flex-container {
-    display: flex;
-}
-
-
-.card-container {
-    width: 75%; /* Определите ширину карточек в соответствии с вашим дизайном */
-}
 #our-projects {
     display: flex;
     flex-direction: column;
-}
-
-.li {
-    font-weight: bold;
-    color: #535353;
-    font-size: 14px;
 }
 
 .modal {
@@ -293,6 +329,12 @@ main {
     background-color: white;
     padding: 20px;
     border-radius: 10px;
+}
+
+.filter-buttons {
+    display: flex;
+    justify-content: space-between; /* Или можете подобрать любой другой способ выравнивания. */
+    margin-top: 20px;
 }
 
 .close-button {
@@ -351,52 +393,84 @@ main {
     display: block;
     font-weight: bold;
     margin-bottom: 5px;
-    font-weight: bold;
     color: #535353;
     font-size: 14px;
 }
 
-#priceRange {
-    width: 100%;
-    margin-top: 5px;
-    background-color: #f4f4f4;
-    /* Изменения в стилях ползунка */
+.price-input-container {
+    margin-top: 10px;
+}
+
+.price-inputs {
+    margin-bottom: 10px;
+}
+
+.price-range {
     -webkit-appearance: none;
-    appearance: none;
-    height: 5px;
-    border-radius: 5px;
-    outline: none;
-    opacity: 0.7;
-    transition: opacity 0.2s;
+    width: 100%; /* ширина должна быть на 100%, чтобы заполнить контейнер */
+    margin: 10px 0;
 }
 
-#priceRange::-webkit-slider-thumb {
+.price-range::-webkit-slider-runnable-track {
+    background: #ddd;
+    border: none;
+    height: 2px;
+}
+
+.price-range::-webkit-slider-thumb {
     -webkit-appearance: none;
-    appearance: none;
-    width: 15px;
+    border: none;
     height: 15px;
-    border-radius: 50%;
-    background: #f0c800; /* Желтый цвет для ползунка */
-    cursor: pointer;
-}
-
-#priceRange::-moz-range-thumb {
     width: 15px;
-    height: 15px;
     border-radius: 50%;
-    background: #f0c800; /* Желтый цвет для ползунка в Firefox */
-    cursor: pointer;
+    background: goldenrod;
+    margin-top: -6.5px; /* Вычислить так, чтобы высота ползунка совпадала с треком */
 }
 
-#priceRange::-webkit-slider-runnable-track {
-    height: 5px;
-    background: #f0c800; /* Серая линия ползунка */
-    border-radius: 5px;
+.price-range::-moz-range-track {
+    background: #ddd;
+    border: none;
+    height: 2px;
 }
 
-#priceValue {
-    display: block;
-    margin-top: 5px;
+.price-range::-moz-range-thumb {
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    background: goldenrod;
+    border: none;
+}
+
+/* Стили для IE */
+.price-range::-ms-track {
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+}
+
+.closeModal{
+    margin-left: 290px;
+}
+
+.price-range::-ms-fill-lower {
+    background: #ddd;
+}
+
+.price-range::-ms-fill-upper {
+    background: #ddd;
+}
+
+.price-range::-ms-thumb {
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    background: goldenrod;
+    border: none;
+}
+
+.price-text-input {
+    width: 49%; /* Используется процент, чтобы оставить место для ровного промежутка */
+    padding: 5px 10px; /* Добавление отступов для полей ввода */
 }
 
 .apply-button {
@@ -406,7 +480,6 @@ main {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    margin-right: 5px;
 }
 
 .reset-button {
@@ -416,38 +489,7 @@ main {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-}
-
-
-.title-block {
-    float: left;
-    margin-top: 100px;
-    padding: 30px;
-    background-color: #ecf3f06e;
-    backdrop-filter: blur(5px);
-}
-
-.font-thin {
-    font-weight: 100;
-}
-
-.title {
-    margin-top: 40px;
-    margin-bottom: 40px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    font-size: large;
-    border-top: 3px solid;
-    border-bottom: 3px solid;
-    font-size: 3rem;
-    font-weight: bold;
-}
-
-button.green {
-    width: 100%;
-    border-style: none;
-    font-weight: 550;
-    background: #cdeae1;
+    margin-right: 15px;
 }
 
 .service {

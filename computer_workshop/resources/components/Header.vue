@@ -3,7 +3,7 @@
         <div class="menu">
             <div class="row margin flex justify-between items-center h-full w-100%">
                 <div class="left">
-                    <router-link to="/"><img class="w-130px h-70px" src="../../public/src/assets/img/cite.png" alt="logo" /></router-link>
+                    <router-link to="/"><img class="w-130px h-70px" src="../assets/img/cite.png" alt="logo" /></router-link>
                 </div>
                 <button @click="scrollToFooter" class="font-medium">О компании</button>
                 <button @click="scrollToProjects" class="font-medium">Услуги</button>
@@ -12,11 +12,11 @@
                 <button @click="scrollToFooter" class="font-medium">Контакты</button>
                 <button class="zak">Корзина</button>
                 <div>
-                    <img class="w-23px h-22px v-middle mr-5px" src="../../public/src/assets/img/email.png" alt="mail" />
+                    <img class="w-23px h-22px v-middle mr-5px" src="../assets/img/email.png" alt="mail" />
                     <span>autoservice@mail.ru</span>
                 </div>
                 <div class="font-medium v-middle mr-5px">
-                    <span class="border v-middle mr-5px"><img class="w-20px h-20px mr-10px v-middle mr-5px" src="../../public/src/assets/img/phone.png" alt="phone icon"> +7 (8442) 11-11-11</span>
+                    <span class="border v-middle mr-5px"><img class="w-20px h-20px mr-10px v-middle mr-5px" src="../assets/img/phone.png" alt="phone icon"> +7 (8442) 11-11-11</span>
                 </div>
             </div>
         </div>
